@@ -3,90 +3,226 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>محطة التقييم التفاعلية</title>
+    <title>المنصة الذكية للتقييم - الإصدار المستقبلي</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    
     <style>
+        /* إعدادات الصفحة والخلفية المتحركة */
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f4f7f6;
+            margin: 0;
+            padding: 0;
+            font-family: 'Cairo', sans-serif;
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(-45deg, #0f0c29, #302b63, #24243e, #00d2ff);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            overflow: hidden;
+        }
+
+        /* حركة الخلفية */
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* تأثير الزجاج الشفاف للحاوية الرئيسية */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            border-radius: 20px;
+            padding: 40px;
             text-align: center;
-            padding: 50px;
+            max-width: 650px;
+            width: 90%;
+            z-index: 10;
         }
-        .container {
-            background: white;
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            max-width: 600px;
-            margin: auto;
+
+        h1 {
+            font-weight: 900;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+            text-shadow: 0 0 10px rgba(0, 210, 255, 0.5);
         }
-        button {
-            background-color: #4CAF50;
-            color: white;
+
+        p {
+            color: #b0c4de;
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+        }
+
+        /* تصميم الزر المستقبلي */
+        .cyber-btn {
+            background: linear-gradient(90deg, #00d2ff 0%, #3a7bd5 100%);
+            color: #fff;
             border: none;
-            padding: 15px 30px;
-            font-size: 18px;
-            border-radius: 5px;
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            font-family: 'Cairo', sans-serif;
+            font-weight: 700;
+            border-radius: 30px;
             cursor: pointer;
-            margin-bottom: 20px;
-            transition: 0.3s;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 15px rgba(0, 210, 255, 0.4);
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 250px;
+            min-height: 60px;
         }
-        button:hover { background-color: #45a049; }
-        #webcam-container { margin: 20px 0; }
-        #webcam-container canvas { border-radius: 10px; border: 3px solid #ddd; }
+
+        .cyber-btn:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 0 25px rgba(0, 210, 255, 0.8);
+        }
+
+        /* تنسيق الكاميرا */
+        #webcam-container {
+            margin: 20px auto;
+            position: relative;
+            display: inline-block;
+        }
+
+        #webcam-container canvas {
+            border-radius: 15px;
+            border: 2px solid #00d2ff;
+            box-shadow: 0 0 20px rgba(0, 210, 255, 0.3);
+            transform: scaleX(-1); /* لجعل الكاميرا كالمرآة */
+        }
+
+        /* شاشة عرض النتائج */
         #label-container {
-            font-size: 24px;
-            font-weight: bold;
-            color: #333;
+            font-size: 1.5rem;
+            font-weight: 700;
             margin-top: 20px;
             padding: 15px;
-            background-color: #e8f5e9;
-            border-radius: 8px;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid #00d2ff;
+            border-radius: 10px;
+            box-shadow: inset 0 0 10px rgba(0, 210, 255, 0.2);
             display: none;
+        }
+
+        .highlight {
+            color: #00ff88;
+            text-shadow: 0 0 8px rgba(0, 255, 136, 0.6);
+        }
+
+        /* دائرة التحميل (الانتظار) */
+        .loader {
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top: 4px solid #fff;
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            animation: spin 1s linear infinite;
+            display: none;
+            position: absolute;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        #loading-text {
+            color: #00d2ff;
+            font-size: 1rem;
+            margin-top: 15px;
+            display: none;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.5; }
+            50% { opacity: 1; }
+            100% { opacity: 0.5; }
         }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h1>المنصة الذكية للتقييم</h1>
-    <p>ضع العينة أو المجسم أمام الكاميرا للتعرف عليه تلقائياً</p>
+<div class="glass-panel">
+    <h1>الذكاء الاصطناعي التعليمي</h1>
+    <p>قم بتهيئة النظام لتشغيل الماسح الضوئي الذكي</p>
     
-    <button type="button" onclick="init()">تشغيل الكاميرا والبدء</button>
+    <button id="start-btn" class="cyber-btn" onclick="init()">
+        <span id="btn-text">تشغيل النظام</span>
+        <div id="loader" class="loader"></div>
+    </button>
+    
+    <div id="loading-text">جاري تهيئة الشبكات العصبية وتشغيل الكاميرا... يرجى الانتظار</div>
     
     <div id="webcam-container"></div>
     <div id="label-container"></div>
 </div>
 
-<!-- استدعاء مكتبات الذكاء الاصطناعي من جوجل -->
 <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@latest/dist/teachablemachine-image.min.js"></script>
 
 <script>
-    // تم إضافة الرابط الخاص بك هنا مع التأكد من وجود الشرطة المائلة في النهاية
+    // ⚠️ ضع رابط نموذجك الخاص هنا مع التأكد من وجود / في النهاية
     const URL = "https://teachablemachine.withgoogle.com/models/nOk5zR67H/";
 
     let model, webcam, labelContainer, maxPredictions;
+    let isPlaying = false;
 
     async function init() {
+        if (isPlaying) return; // منع الضغط المتكرر
+
+        const btn = document.getElementById("start-btn");
+        const btnText = document.getElementById("btn-text");
+        const loader = document.getElementById("loader");
+        const loadingText = document.getElementById("loading-text");
+
+        // تغيير شكل الزر لإظهار حالة التحميل
+        btnText.style.display = "none";
+        loader.style.display = "block";
+        loadingText.style.display = "block";
+        btn.style.cursor = "wait";
+
         const modelURL = URL + "model.json";
         const metadataURL = URL + "metadata.json";
 
-        // تحميل النموذج
-        model = await tmImage.load(modelURL, metadataURL);
-        maxPredictions = model.getTotalClasses();
+        try {
+            // تحميل النموذج
+            model = await tmImage.load(modelURL, metadataURL);
+            maxPredictions = model.getTotalClasses();
 
-        // إعداد الكاميرا
-        const flip = true; 
-        webcam = new tmImage.Webcam(400, 400, flip); 
-        await webcam.setup(); 
-        await webcam.play();
-        window.requestAnimationFrame(loop);
+            // إعداد الكاميرا
+            const flip = true; 
+            webcam = new tmImage.Webcam(400, 400, flip); 
+            await webcam.setup(); // طلب إذن الكاميرا
+            await webcam.play();
+            window.requestAnimationFrame(loop);
 
-        // إضافة الكاميرا للصفحة
-        document.getElementById("webcam-container").appendChild(webcam.canvas);
-        
-        labelContainer = document.getElementById("label-container");
-        labelContainer.style.display = "block";
+            // إخفاء زر التحميل وإظهار الكاميرا
+            btn.style.display = "none";
+            loadingText.style.display = "none";
+            
+            document.getElementById("webcam-container").appendChild(webcam.canvas);
+            
+            labelContainer = document.getElementById("label-container");
+            labelContainer.style.display = "block";
+            isPlaying = true;
+
+        } catch (error) {
+            // في حال رفض إذن الكاميرا أو وجود خطأ
+            console.error(error);
+            loadingText.innerHTML = "❌ حدث خطأ! يرجى التأكد من السماح للمتصفح باستخدام الكاميرا.";
+            loadingText.style.color = "#ff4d4d";
+            loader.style.display = "none";
+            btnText.style.display = "block";
+            btn.style.cursor = "pointer";
+        }
     }
 
     async function loop() {
@@ -98,15 +234,14 @@
     async function predict() {
         const prediction = await model.predictTopK(webcam.canvas, 1);
         
-        // عرض النتيجة الأعلى دقة فقط
         const className = prediction[0].className;
         const probability = (prediction[0].probability * 100).toFixed(0);
         
+        // إذا كانت الدقة أعلى من 85% سيظهر النتيجة بشكل واضح ومضيء
         if(probability > 85) {
-            labelContainer.innerHTML = "تم التعرف على: <span style='color:#4CAF50'>" + className + "</span> بنسبة دقة " + probability + "%";
-            // هنا لاحقاً سنضيف كود إرسال البيانات إلى Google Sheets
+            labelContainer.innerHTML = `تم رصد: <span class="highlight">${className}</span> (دقة: ${probability}%)`;
         } else {
-            labelContainer.innerHTML = "جاري التعرف... يرجى توضيح العينة";
+            labelContainer.innerHTML = "جاري الفحص... يرجى توضيح العينة";
         }
     }
 </script>
