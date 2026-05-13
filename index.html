@@ -10,7 +10,8 @@
         /* إعدادات الصفحة والخلفية المتحركة */
         body {
             margin: 0;
-            padding: 0;
+            padding: 20px; /* إضافة مساحة حتى لا يلتصق التصميم بالأطراف */
+            box-sizing: border-box;
             font-family: 'Cairo', sans-serif;
             color: #fff;
             min-height: 100vh;
@@ -20,7 +21,7 @@
             background: linear-gradient(-45deg, #0f0c29, #302b63, #24243e, #00d2ff);
             background-size: 400% 400%;
             animation: gradientBG 15s ease infinite;
-            overflow: hidden;
+            overflow-y: auto; /* السماح بالنزول للأسفل لرؤية النتيجة */
         }
 
         /* حركة الخلفية */
@@ -38,24 +39,25 @@
             border: 1px solid rgba(255, 255, 255, 0.1);
             box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
             border-radius: 20px;
-            padding: 40px;
+            padding: 30px; /* تصغير المسافات الداخلية قليلاً */
             text-align: center;
             max-width: 650px;
-            width: 90%;
+            width: 100%;
             z-index: 10;
         }
 
         h1 {
             font-weight: 900;
-            margin-bottom: 10px;
+            margin-bottom: 5px;
+            font-size: 1.8rem; /* تصغير العنوان قليلاً */
             letter-spacing: 1px;
             text-shadow: 0 0 10px rgba(0, 210, 255, 0.5);
         }
 
         p {
             color: #b0c4de;
-            margin-bottom: 30px;
-            font-size: 1.1rem;
+            margin-bottom: 20px;
+            font-size: 1rem;
         }
 
         /* تصميم الزر المستقبلي */
@@ -63,8 +65,8 @@
             background: linear-gradient(90deg, #00d2ff 0%, #3a7bd5 100%);
             color: #fff;
             border: none;
-            padding: 15px 40px;
-            font-size: 1.2rem;
+            padding: 12px 35px;
+            font-size: 1.1rem;
             font-family: 'Cairo', sans-serif;
             font-weight: 700;
             border-radius: 30px;
@@ -75,8 +77,8 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            min-width: 250px;
-            min-height: 60px;
+            min-width: 220px;
+            min-height: 50px;
         }
 
         .cyber-btn:hover {
@@ -86,9 +88,10 @@
 
         /* تنسيق الكاميرا */
         #webcam-container {
-            margin: 20px auto;
+            margin: 15px auto;
             position: relative;
             display: inline-block;
+            max-width: 100%; /* لجعل الكاميرا لا تتجاوز حدود الشاشة */
         }
 
         #webcam-container canvas {
@@ -96,19 +99,22 @@
             border: 2px solid #00d2ff;
             box-shadow: 0 0 20px rgba(0, 210, 255, 0.3);
             transform: scaleX(-1); /* لجعل الكاميرا كالمرآة */
+            max-width: 100%; /* تصغير تلقائي في الشاشات الصغيرة */
+            height: auto;
         }
 
         /* شاشة عرض النتائج */
         #label-container {
-            font-size: 1.5rem;
+            font-size: 1.3rem;
             font-weight: 700;
-            margin-top: 20px;
+            margin-top: 15px;
             padding: 15px;
-            background: rgba(0, 0, 0, 0.4);
+            background: rgba(0, 0, 0, 0.6); /* تغميق الخلفية ليبرز النص أكثر */
             border: 1px solid #00d2ff;
             border-radius: 10px;
             box-shadow: inset 0 0 10px rgba(0, 210, 255, 0.2);
             display: none;
+            word-wrap: break-word; /* منع النص الطويل من الخروج عن الإطار */
         }
 
         .highlight {
@@ -169,21 +175,19 @@
 <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@latest/dist/teachablemachine-image.min.js"></script>
 
 <script>
-    // ⚠️ ضع رابط نموذجك الخاص هنا مع التأكد من وجود / في النهاية
     const URL = "https://teachablemachine.withgoogle.com/models/nOk5zR67H/";
 
     let model, webcam, labelContainer, maxPredictions;
     let isPlaying = false;
 
     async function init() {
-        if (isPlaying) return; // منع الضغط المتكرر
+        if (isPlaying) return;
 
         const btn = document.getElementById("start-btn");
         const btnText = document.getElementById("btn-text");
         const loader = document.getElementById("loader");
         const loadingText = document.getElementById("loading-text");
 
-        // تغيير شكل الزر لإظهار حالة التحميل
         btnText.style.display = "none";
         loader.style.display = "block";
         loadingText.style.display = "block";
@@ -193,18 +197,16 @@
         const metadataURL = URL + "metadata.json";
 
         try {
-            // تحميل النموذج
             model = await tmImage.load(modelURL, metadataURL);
             maxPredictions = model.getTotalClasses();
 
-            // إعداد الكاميرا
             const flip = true; 
-            webcam = new tmImage.Webcam(400, 400, flip); 
-            await webcam.setup(); // طلب إذن الكاميرا
+            // تم تصغير أبعاد الكاميرا هنا إلى 300 بدلاً من 400
+            webcam = new tmImage.Webcam(300, 300, flip); 
+            await webcam.setup(); 
             await webcam.play();
             window.requestAnimationFrame(loop);
 
-            // إخفاء زر التحميل وإظهار الكاميرا
             btn.style.display = "none";
             loadingText.style.display = "none";
             
@@ -215,7 +217,6 @@
             isPlaying = true;
 
         } catch (error) {
-            // في حال رفض إذن الكاميرا أو وجود خطأ
             console.error(error);
             loadingText.innerHTML = "❌ حدث خطأ! يرجى التأكد من السماح للمتصفح باستخدام الكاميرا.";
             loadingText.style.color = "#ff4d4d";
@@ -237,9 +238,8 @@
         const className = prediction[0].className;
         const probability = (prediction[0].probability * 100).toFixed(0);
         
-        // إذا كانت الدقة أعلى من 85% سيظهر النتيجة بشكل واضح ومضيء
         if(probability > 85) {
-            labelContainer.innerHTML = `تم رصد: <span class="highlight">${className}</span> (دقة: ${probability}%)`;
+            labelContainer.innerHTML = `النتيجة: <span class="highlight">${className}</span> (دقة: ${probability}%)`;
         } else {
             labelContainer.innerHTML = "جاري الفحص... يرجى توضيح العينة";
         }
