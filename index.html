@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>المنصة الذكاء المعرفي - الإصدار المستقبلي</title>
+    <title>الموسوعة الذكية التفاعلية</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     
     <style>
-        /* إعدادات الصفحة والخلفية المتحركة */
+        /* إعدادات الصفحة والخلفية */
         body {
             margin: 0;
             padding: 20px;
@@ -30,7 +30,7 @@
             100% { background-position: 0% 50%; }
         }
 
-        /* تأثير الزجاج الشفاف */
+        /* الحاوية الزجاجية */
         .glass-panel {
             background: rgba(255, 255, 255, 0.05);
             backdrop-filter: blur(15px);
@@ -40,7 +40,7 @@
             border-radius: 20px;
             padding: 30px;
             text-align: center;
-            max-width: 650px;
+            max-width: 700px; /* تم توسيعها قليلاً لتناسب النصوص الطويلة */
             width: 100%;
             z-index: 10;
         }
@@ -48,19 +48,16 @@
         h1 {
             font-weight: 900;
             margin-bottom: 5px;
-            font-size: 1.8rem;
-            letter-spacing: 1px;
-            text-shadow: 0 0 10px rgba(0, 210, 255, 0.5);
+            font-size: 2rem;
+            text-shadow: 0 0 15px rgba(0, 210, 255, 0.6);
         }
 
-        #intro-text {
+        p.subtitle {
             color: #b0c4de;
             margin-bottom: 20px;
-            font-size: 1rem;
-            transition: opacity 0.5s ease;
+            font-size: 1.1rem;
         }
 
-        /* تصميم الزر المستقبلي */
         .cyber-btn {
             background: linear-gradient(90deg, #00d2ff 0%, #3a7bd5 100%);
             color: #fff;
@@ -73,10 +70,6 @@
             cursor: pointer;
             transition: all 0.3s ease;
             box-shadow: 0 0 15px rgba(0, 210, 255, 0.4);
-            position: relative;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
             min-width: 220px;
             min-height: 50px;
         }
@@ -86,13 +79,12 @@
             box-shadow: 0 0 25px rgba(0, 210, 255, 0.8);
         }
 
-        /* نص التعليمات فوق الكاميرا */
         #camera-instruction {
             display: none;
             color: #00ff88;
             font-size: 1.2rem;
             font-weight: 700;
-            margin: 15px 0 5px 0;
+            margin: 15px 0;
             animation: pulse-text 2s infinite;
         }
 
@@ -102,40 +94,50 @@
             100% { opacity: 0.7; }
         }
 
-        /* تنسيق الكاميرا */
         #webcam-container {
-            margin: 5px auto 15px auto;
-            position: relative;
-            display: inline-block;
-            max-width: 100%;
+            margin: 10px auto;
         }
 
         #webcam-container canvas {
             border-radius: 15px;
-            border: 2px solid #00d2ff;
-            box-shadow: 0 0 20px rgba(0, 210, 255, 0.3);
+            border: 3px solid #00d2ff;
+            box-shadow: 0 0 20px rgba(0, 210, 255, 0.4);
             transform: scaleX(-1);
             max-width: 100%;
             height: auto;
         }
 
-        /* شاشة عرض النتائج */
-        #label-container {
-            font-size: 1.3rem;
-            font-weight: 700;
-            margin-top: 15px;
-            padding: 15px;
-            background: rgba(0, 0, 0, 0.6);
-            border: 1px solid #00d2ff;
+        /* تنسيق مربع المعلومات الذي سيظهر */
+        #info-card {
+            margin-top: 20px;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            border-right: 5px solid #00ff88; /* خط جانبي أنيق */
             border-radius: 10px;
-            box-shadow: inset 0 0 10px rgba(0, 210, 255, 0.2);
+            box-shadow: inset 0 0 15px rgba(0, 255, 136, 0.1);
             display: none;
-            word-wrap: break-word;
+            text-align: right; /* محاذاة النص لليمين ليناسب العربية */
+            animation: slideUp 0.5s ease-out;
         }
 
-        .highlight {
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .object-title {
             color: #00ff88;
-            text-shadow: 0 0 8px rgba(0, 255, 136, 0.6);
+            font-size: 1.5rem;
+            font-weight: 900;
+            margin-bottom: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            padding-bottom: 5px;
+        }
+
+        .object-details {
+            color: #e0e0e0;
+            font-size: 1.1rem;
+            line-height: 1.6;
         }
 
         /* دوائر التحميل */
@@ -147,13 +149,10 @@
             height: 25px;
             animation: spin 1s linear infinite;
             display: none;
-            position: absolute;
+            margin: auto;
         }
 
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
 
         #loading-text {
             color: #00d2ff;
@@ -163,56 +162,66 @@
             animation: pulse 1.5s infinite;
         }
 
-        @keyframes pulse {
-            0% { opacity: 0.5; }
-            50% { opacity: 1; }
-            100% { opacity: 0.5; }
-        }
+        @keyframes pulse { 50% { opacity: 1; } 100% { opacity: 0.5; } }
     </style>
 </head>
 <body>
 
 <div class="glass-panel">
-    <h1> منصة الذكاء المعرفي </h1>
-    <p id="intro-text">قم بتهيئة النظام لتشغيل الماسح الضوئي الذكي</p>
+    <h1>الموسوعة الذكية</h1>
+    <p class="subtitle" id="intro-text">نظام التعرف الآلي وتقديم المعلومات للطلاب</p>
     
     <button id="start-btn" class="cyber-btn" onclick="init()">
-        <span id="btn-text">تشغيل النظام</span>
+        <span id="btn-text">تشغيل الماسح الضوئي</span>
         <div id="loader" class="loader"></div>
     </button>
     
-    <div id="loading-text">جاري تهيئة الشبكات العصبية وتشغيل الكاميرا... يرجى الانتظار</div>
-    
-    <!-- رسالة التعليمات التي ستظهر فوق الكاميرا -->
-    <div id="camera-instruction">⬇️ ضع العينة أمام الكاميرا للتعرف عليها ⬇️</div>
-    
+    <div id="loading-text">جاري تهيئة العقل الإلكتروني... يرجى الانتظار</div>
+    <div id="camera-instruction">وجه الكاميرا نحو القطعة أو المجسم</div>
     <div id="webcam-container"></div>
-    <div id="label-container"></div>
+    
+    <!-- بطاقة المعلومات التي ستعرض النتيجة -->
+    <div id="info-card">
+        <div class="object-title" id="obj-title">اسم القطعة</div>
+        <div class="object-details" id="obj-details">جاري تحميل المعلومات...</div>
+    </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@latest/dist/teachablemachine-image.min.js"></script>
 
 <script>
-    const URL = "https://teachablemachine.withgoogle.com/models/nOk5zR67H/";
+    // ⚠️ ضع الرابط الخاص بك هنا
+    const URL = "https://teachablemachine.withgoogle.com/models/ptSLJmKdP/";
 
-    let model, webcam, labelContainer, maxPredictions;
+    /* 
+    =========================================
+    🧠 قاعدة المعرفة (The Knowledge Base)
+    =========================================
+    هنا تضع اسم الفئة (كما كتبتها في Teachable Machine بالضبط) 
+    وأمامها المعلومات التي تريد أن يقرأها النظام للطلاب.
+    */
+    const knowledgeBase = {
+        "RAM": "هذه القطعة تسمى ذاكرة الوصول العشوائي أو الرام. هي الذاكرة المؤقتة للحاسوب، حيث تحتفظ بالبيانات أثناء عمل الجهاز فقط، وتفقدها بمجرد انقطاع التيار الكهربائي. كلما زاد حجمها، زادت سرعة الجهاز في تشغيل البرامج.",
+        
+        "HDD": "هذا هو القرص الصلب الميكانيكي. وظيفته تخزين جميع ملفاتك، وصورك، ونظام التشغيل بشكل دائم. حتى لو قمت بإيقاف تشغيل الحاسوب، ستبقى بياناتك محفوظة بداخله بأمان.",
+        
+        "CPU": "هذا هو المعالج الدقيق أو وحدة المعالجة المركزية. هل تعلم أنه بمثابة العقل المدبر للحاسوب؟ فهو الذي يقوم بتنفيذ جميع العمليات الحسابية والمنطقية، وبدونه لا يمكن للحاسوب أن يعمل.",
+        
+        "Motherboard": "هذه هي اللوحة الأم. سُميت بهذا الاسم لأنها تحتضن وتربط جميع قطع الحاسوب ببعضها البعض، مثل المعالج والذاكرة والقرص الصلب، وتسمح بتبادل البيانات بينها."
+    };
+
+    let model, webcam, maxPredictions;
     let isPlaying = false;
+    let lastSpokenClass = ""; 
 
     async function init() {
         if (isPlaying) return;
 
-        const btn = document.getElementById("start-btn");
-        const btnText = document.getElementById("btn-text");
-        const loader = document.getElementById("loader");
-        const loadingText = document.getElementById("loading-text");
-        const introText = document.getElementById("intro-text");
-        const cameraInstruction = document.getElementById("camera-instruction");
-
-        btnText.style.display = "none";
-        loader.style.display = "block";
-        loadingText.style.display = "block";
-        btn.style.cursor = "wait";
+        document.getElementById("btn-text").style.display = "none";
+        document.getElementById("loader").style.display = "block";
+        document.getElementById("loading-text").style.display = "block";
+        document.getElementById("start-btn").style.cursor = "wait";
 
         const modelURL = URL + "model.json";
         const metadataURL = URL + "metadata.json";
@@ -227,25 +236,17 @@
             await webcam.play();
             window.requestAnimationFrame(loop);
 
-            // إخفاء عناصر البداية وإظهار الكاميرا والتعليمات
-            btn.style.display = "none";
-            loadingText.style.display = "none";
-            introText.style.display = "none"; // إخفاء النص القديم لتقليل الزحمة
-            cameraInstruction.style.display = "block"; // إظهار التعليمات الجديدة
+            document.getElementById("start-btn").style.display = "none";
+            document.getElementById("loading-text").style.display = "none";
+            document.getElementById("intro-text").style.display = "none";
+            document.getElementById("camera-instruction").style.display = "block"; 
             
             document.getElementById("webcam-container").appendChild(webcam.canvas);
-            
-            labelContainer = document.getElementById("label-container");
-            labelContainer.style.display = "block";
             isPlaying = true;
 
         } catch (error) {
             console.error(error);
-            loadingText.innerHTML = "❌ حدث خطأ! يرجى التأكد من السماح للمتصفح باستخدام الكاميرا.";
-            loadingText.style.color = "#ff4d4d";
-            loader.style.display = "none";
-            btnText.style.display = "block";
-            btn.style.cursor = "pointer";
+            document.getElementById("loading-text").innerHTML = "❌ حدث خطأ! تأكد من إذن الكاميرا ورابط النموذج.";
         }
     }
 
@@ -255,16 +256,46 @@
         window.requestAnimationFrame(loop);
     }
 
+    function speak(text) {
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.cancel(); // إيقاف أي صوت سابق لتجنب التداخل
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'ar-SA'; 
+            utterance.rate = 0.9; // أبطأ قليلاً ليكون الشرح مفهوماً للطلاب
+            window.speechSynthesis.speak(utterance);
+        }
+    }
+
     async function predict() {
         const prediction = await model.predictTopK(webcam.canvas, 1);
         
         const className = prediction[0].className;
         const probability = (prediction[0].probability * 100).toFixed(0);
         
+        const infoCard = document.getElementById("info-card");
+        const titleEl = document.getElementById("obj-title");
+        const detailsEl = document.getElementById("obj-details");
+        
         if(probability > 85) {
-            labelContainer.innerHTML = `النتيجة: <span class="highlight">${className}</span> (دقة: ${probability}%)`;
+            if (className !== lastSpokenClass) {
+                
+                // جلب المعلومات من قاعدة المعرفة، أو وضع نص افتراضي إذا لم تكن موجودة
+                const informationText = knowledgeBase[className] || "تم التعرف على هذه القطعة، ولكن لا توجد تفاصيل إضافية مسجلة عنها في قاعدة البيانات حالياً.";
+                
+                // عرض النتيجة والمعلومات على الشاشة
+                infoCard.style.display = "block";
+                titleEl.innerText = className;
+                detailsEl.innerText = informationText;
+                
+                // نطق المعلومات
+                speak(informationText);
+                
+                lastSpokenClass = className; 
+            }
         } else {
-            labelContainer.innerHTML = "جاري الفحص... يرجى توضيح العينة";
+            // إذا لم يكن متأكداً من القطعة، يخفي بطاقة المعلومات
+            infoCard.style.display = "none";
+            lastSpokenClass = ""; 
         }
     }
 </script>
